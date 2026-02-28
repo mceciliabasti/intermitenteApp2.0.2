@@ -326,10 +326,10 @@ export default function WorkshopsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 space-x-2">
-                      <button onClick={() => handleEdit(workshop)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200">Editar</button>
-                      <button onClick={() => handleDelete(workshop._id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200">Eliminar</button>
-                      <a href={`/admin/workshops/${workshop._id}/content`} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200 inline-block">Materiales</a>
-                      <button onClick={() => handleShowStudents(workshop)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200">Ver alumnos</button>
+                      <button onClick={() => handleEdit(workshop)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200" style={{color:'#fff', WebkitTextFillColor:'#fff', textShadow:'0 0 0 #fff'}}>Editar</button>
+                      <button onClick={() => handleDelete(workshop._id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200" style={{color:'#fff', WebkitTextFillColor:'#fff', textShadow:'0 0 0 #fff'}}>Eliminar</button>
+                      <a href={`/admin/workshops/${workshop._id}/content`} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200 inline-block" style={{color:'#fff', WebkitTextFillColor:'#fff', textShadow:'0 0 0 #fff'}}>Materiales</a>
+                      <button onClick={() => handleShowStudents(workshop)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition duration-200" style={{color:'#fff', WebkitTextFillColor:'#fff', textShadow:'0 0 0 #fff'}}>Ver alumnos</button>
                     </td>
                         {studentsModal && (
                           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">

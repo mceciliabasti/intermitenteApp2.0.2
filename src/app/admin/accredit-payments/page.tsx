@@ -140,7 +140,7 @@ export default function AdminAccreditPaymentsPage() {
                                     ? "bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-semibold"
                                     : "bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-semibold"
                                   }
-                                  style={{color:'#fff'}}
+                                  style={{color:'#fff', WebkitTextFillColor:'#fff', textShadow:'0 0 0 #fff'}}
                                   disabled={saving[w._id] ? true : false}
                                   onClick={() => handleToggle(w._id, payment._id, paid)}
                                 >

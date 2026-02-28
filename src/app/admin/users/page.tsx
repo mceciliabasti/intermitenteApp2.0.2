@@ -298,7 +298,7 @@ export default function UsersPage() {
                 </div>
               </div>
               <div className="flex gap-4 mt-6">
-                <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded">
+                <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded" style={{color:'#fff'}}>
                   {editingUser ? 'Guardar Cambios' : 'Crear Usuario'}
                 </button>
                 <button type="button" className="bg-gray-300 text-gray-800 px-6 py-2 rounded" onClick={() => { setShowForm(false); setEditingUser(null); setFormData({ email: '', password: '', role: 'student', firstName: '', lastName: '', phone: '', dni: '' }); }}>

@@ -5,6 +5,7 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import StudentNavBar from '@/components/StudentNavBar';
+import AdminNavBar from '@/components/AdminNavBar';
 
 interface UserData {
   firstName: string;
@@ -102,7 +103,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <StudentNavBar />
+      {session?.user?.role === 'admin' ? <AdminNavBar title="Perfil" /> : <StudentNavBar />}
       <div className="max-w-xl mx-auto p-8">
         <h1 className="text-2xl font-bold mb-6">Mi Perfil</h1>
         {section === 'view' && user && (

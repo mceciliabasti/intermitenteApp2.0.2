@@ -140,6 +140,7 @@ export default function AdminAccreditPaymentsPage() {
                                     ? "bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-semibold"
                                     : "bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-semibold"
                                   }
+                                  style={{color:'#fff'}}
                                   disabled={saving[w._id] ? true : false}
                                   onClick={() => handleToggle(w._id, payment._id, paid)}
                                 >
@@ -160,6 +161,7 @@ export default function AdminAccreditPaymentsPage() {
             <div className="flex items-center gap-4 mt-4">
               <button
                 className="bg-green-600 text-white px-6 py-2 rounded-lg shadow-md disabled:opacity-50"
+                style={{color:'#fff'}}
                 disabled={saving[w._id] || !selected[w._id] || Object.keys(selected[w._id]).length === 0}
                 onClick={() => handleSave(w._id)}
               >

@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+/*  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await signIn('credentials', {
       email,
@@ -21,6 +21,28 @@ export default function LoginPage() {
       setError('Credenciales inválidas');
     } else {
       router.push('/dashboard');
+    }
+  }; */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(''); // Limpiamos errores anteriores
+
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError('Credenciales inválidas');
+    } else {
+      // 1. Refrescamos la ruta actual para que el layout reconozca la sesión
+      router.refresh(); 
+      
+      // 2. Pequeña espera para asegurar que la cookie se guardó (opcional pero seguro)
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
     }
   };
 

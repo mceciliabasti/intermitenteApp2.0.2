@@ -41,7 +41,8 @@ export default function LoginPage() {
       
       // 2. Pequeña espera para asegurar que la cookie se guardó (opcional pero seguro)
       setTimeout(() => {
-        router.push('/dashboard');
+   //     router.push('/dashboard');
+     window.location.href = '/dashboard';
       }, 100);
     }
   };

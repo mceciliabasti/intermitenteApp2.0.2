@@ -50,6 +50,25 @@ const handler = NextAuth({
       },
     }),
   ],
+callbacks: {
+  async jwt({ token, user }: any) {
+    if (user) {
+      // Guardamos el rol que viene de la base de datos en el token
+      token.role = user.role; 
+      token.id = user.id;
+    }
+    return token;
+  },
+  async session({ session, token }: any) {
+    if (session.user) {
+      // Pasamos el rol del token a la sesión visible por el cliente
+      session.user.role = token.role;
+      session.user.id = token.id;
+    }
+    return session;
+  },
+},
+
   session: {
     strategy: "jwt",
   },

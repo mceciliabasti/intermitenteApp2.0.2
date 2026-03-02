@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Club de Arte",
-  description: "Aplicación para gestión de talleres de arte",
+  title: "Intermitente - Club de Arte",
+  description: "Materiales",
 };
 
 export default function RootLayout({

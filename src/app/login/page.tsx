@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -48,10 +49,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 to-fuchsia-700 flex items-center justify-center p-4">
       <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600 mb-2">Club de Arte</h1>
+          <div className="flex justify-center mb-4">
+            <Image src="/logo192.png" alt="Logo Intermitente" width={100} height={100} className="rounded-full" />
+          </div>
+          <h1 className="text-4xl font-bold text-fuchsia-700 mb-2">Intermitente - Club de Arte</h1>
           <p className="text-gray-600">Iniciar Sesión</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -78,7 +82,11 @@ export default function LoginPage() {
             />
           </div>
           {error && <p className="text-red-600 font-semibold bg-red-50 p-3 rounded-lg">{error}</p>}
-          <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-200 transform hover:scale-105">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-700 text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-200 transform hover:scale-105"
+            style={{ color: '#fff', WebkitTextFillColor: '#fff', textShadow: '0 0 0 #fff', fontWeight: 'bold' }}
+          >
             Iniciar Sesión
           </button>
         </form>

@@ -1,4 +1,4 @@
-// Endpoint desactivado. Usar src/pages/api/upload.ts para carga de archivos.
+// Archivo eliminado para evitar conflicto de rutas entre App Router y Pages Router.
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 

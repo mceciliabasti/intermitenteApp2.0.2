@@ -265,7 +265,7 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
           </div>
         </div>
       )}
-    // Componente para mostrar la playlist y permitir quitar pistas
+    {/* Componente para mostrar la playlist y permitir quitar pistas */}
     </AudioContext.Provider>
   );
 }

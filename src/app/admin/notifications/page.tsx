@@ -118,8 +118,16 @@ export default function AdminNotificationsPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.title.trim() || !formData.message.trim() || selectedUsers.length === 0) {
-      setToast({ type: 'error', message: 'Completa todos los campos requeridos' });
+    if (!formData.title.trim()) {
+      setToast({ type: 'error', message: 'El título es obligatorio.' });
+      return;
+    }
+    if (!formData.message.trim()) {
+      setToast({ type: 'error', message: 'El mensaje es obligatorio.' });
+      return;
+    }
+    if (selectedUsers.length === 0) {
+      setToast({ type: 'error', message: 'Selecciona al menos un usuario.' });
       return;
     }
 

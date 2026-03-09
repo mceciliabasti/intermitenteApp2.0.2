@@ -24,14 +24,16 @@ export default async function handler(
 
   const form = new formidable.IncomingForm();
   form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error parsing form data' });
-    }
-    const file = Array.isArray(files.file) ? files.file[0] : files.file;
-    if (!file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
     try {
+      if (err) {
+        res.status(500).json({ error: 'Error parsing form data', details: err.message });
+        return;
+      }
+      const file = Array.isArray(files.file) ? files.file[0] : files.file;
+      if (!file) {
+        res.status(400).json({ error: 'No file uploaded' });
+        return;
+      }
       const data = fs.readFileSync(file.filepath);
       const base64 = data.toString('base64');
       const dataUri = `data:${file.mimetype};base64,${base64}`;
@@ -40,9 +42,9 @@ export default async function handler(
         folder: 'materials',
         public_id: `${Date.now()}-${file.originalFilename}`,
       });
-      return res.status(200).json({ url: result.secure_url });
+      res.status(200).json({ url: result.secure_url });
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to upload file', details: (error as Error).message });
+      res.status(500).json({ error: 'Failed to upload file', details: (error as Error).message });
     }
   });
 }

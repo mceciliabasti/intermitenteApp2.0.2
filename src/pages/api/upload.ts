@@ -27,7 +27,7 @@ export default async function handler(
     if (err) {
       return res.status(500).json({ error: 'Error parsing form data' });
     }
-    const file = files.file as File;
+    const file = Array.isArray(files.file) ? files.file[0] : files.file;
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }

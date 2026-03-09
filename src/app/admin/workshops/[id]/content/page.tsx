@@ -450,9 +450,14 @@ export default function WorkshopContentPage() {
                         <video controls src={item.fileUrl} className="w-full max-h-60" />
                       )}
                       {item.type === 'pdf' && (
-                        <div className="border rounded overflow-hidden">
-                          <iframe src={item.fileUrl} className="w-full h-96" />
-                        </div>
+                        <a
+                          href={item.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="bg-indigo-600 text-white px-3 py-2 rounded inline-block mt-2"
+                        >
+                          Descargar PDF
+                        </a>
                       )}
                       {item.type === 'image' && (
                         <img src={item.fileUrl} alt={item.title} className="w-full rounded" />

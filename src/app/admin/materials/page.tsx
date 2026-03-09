@@ -118,7 +118,17 @@ export default function AdminMaterialsPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold mb-1">Archivo</label>
-              <input type="file" onChange={handleFileChange} className="w-full" />
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="w-full"
+                accept={
+                  type === 'pdf' ? 'application/pdf' :
+                  type === 'audio' ? 'audio/*' :
+                  type === 'video' ? 'video/*' :
+                  type === 'image' ? 'image/*' : undefined
+                }
+              />
             </div>
             <div>
               <label className="block text-sm font-semibold mb-1">Etiquetas</label>

@@ -26,7 +26,7 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto p-8">
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-2">Panel de Administración</h2>
-          <p className="text-gray-600">Bienvenido, {session.user.name || 'Admin'}</p>
+            <p className="text-gray-600">Hola, {session.user.name || 'Admin'}</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">

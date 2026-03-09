@@ -12,6 +12,7 @@ cloudinary.config({
 export const config = {
   api: {
     bodyParser: false,
+    sizeLimit: '10mb',
   },
 };
 export default async function handler(
@@ -23,7 +24,9 @@ export default async function handler(
       res.status(405).json({ error: 'Method not allowed' });
       return;
     }
-    const form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm({
+      maxFileSize: 10 * 1024 * 1024 // 10MB
+    });
     form.parse(req, async (err: any, fields: any, files: any) => {
       try {
         if (err) {
@@ -41,7 +44,7 @@ export default async function handler(
         const result = await cloudinary.uploader.upload(dataUri, {
           resource_type: 'auto',
           folder: 'materials',
-          public_id: `${Date.now()}-${file.originalFilename}`,
+          public_id: `${Date.now()}-${file.originalFilename.replace(/\.[^/.]+$/, '')}`,
         });
         res.status(200).json({ url: result.secure_url });
       } catch (error) {

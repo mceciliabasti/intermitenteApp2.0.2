@@ -1,3 +1,4 @@
+import PDFViewer from '@/components/PDFViewer';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -450,12 +451,7 @@ export default function WorkshopContentPage() {
                         <video controls src={item.fileUrl} className="w-full max-h-60" />
                       )}
                       {item.type === 'pdf' && (
-                        <div className="border rounded overflow-hidden">
-                          <iframe
-                            src={item.fileUrl.replace('/upload/', '/upload/fl_attachment:false/')}
-                            className="w-full h-96"
-                          />
-                        </div>
+                        <PDFViewer url={item.fileUrl} />
                       )}
                       {item.type === 'image' && (
                         <img src={item.fileUrl} alt={item.title} className="w-full rounded" />

@@ -23,6 +23,7 @@ interface Workshop {
     referencias: Content[];
     coreos: Content[];
     guion: Content[];
+    'use client';
     vestuario: Content[];
   };
 }

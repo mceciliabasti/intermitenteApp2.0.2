@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v2 as cloudinary } from 'cloudinary';
-import formidable, { File } from 'formidable';
+const formidable = require('formidable');
 import fs from 'fs';
 
 cloudinary.config({

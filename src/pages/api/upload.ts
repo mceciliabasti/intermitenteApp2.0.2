@@ -42,7 +42,7 @@ export default async function handler(
         const base64 = data.toString('base64');
         const dataUri = `data:${file.mimetype};base64,${base64}`;
         const result = await cloudinary.uploader.upload(dataUri, {
-          resource_type: 'auto',
+          resource_type: file.mimetype === 'application/pdf' ? 'raw' : 'auto',
           folder: 'materials',
           public_id: `${Date.now()}-${file.originalFilename.replace(/\.[^/.]+$/, '')}`,
         });

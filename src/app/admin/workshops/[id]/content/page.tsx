@@ -451,7 +451,10 @@ export default function WorkshopContentPage() {
                       )}
                       {item.type === 'pdf' && (
                         <div className="border rounded overflow-hidden">
-                          <iframe src={item.fileUrl + '/fl_attachment:false'} className="w-full h-96" />
+                          <iframe
+                            src={item.fileUrl.replace('/upload/', '/upload/fl_attachment:false/')}
+                            className="w-full h-96"
+                          />
                         </div>
                       )}
                       {item.type === 'image' && (

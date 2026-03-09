@@ -42,10 +42,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   // Notify enrolled users
   const enrolledUsers = await User.find({ 'enrollments.workshop': id, 'enrollments.status': 'current' });
+  // Obtener admin actual
+  const adminUser = await User.findOne({ email: session.user.email });
   const notifications = enrolledUsers.map(user => ({
     user: user._id,
+    title: `Nuevo contenido en ${section}`,
     message: `Nuevo contenido disponible en ${section} para el taller: ${workshop.name}`,
     type: 'info',
+    createdBy: adminUser ? adminUser._id : undefined,
   }));
   await Notification.insertMany(notifications);
 

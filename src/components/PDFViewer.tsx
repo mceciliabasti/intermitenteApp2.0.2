@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useRef } from 'react';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import { pdfjs } from 'pdfjs-dist';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PDFViewerProps {
   url: string;

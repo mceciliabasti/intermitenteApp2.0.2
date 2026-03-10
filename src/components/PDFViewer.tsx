@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
 "use client";
-import { pdfjs } from 'pdfjs-dist';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import { useEffect, useRef } from 'react';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import 'pdfjs-dist/build/pdf.worker.entry';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
 interface PDFViewerProps {
   url: string;
@@ -12,7 +14,7 @@ export default function PDFViewer({ url }: PDFViewerProps) {
 
   useEffect(() => {
     const renderPDF = async () => {
-      const loadingTask = pdfjs.getDocument(url);
+      const loadingTask = pdfjsLib.getDocument(url);
       const pdf = await loadingTask.promise;
       const page = await pdf.getPage(1);
       const viewport = page.getViewport({ scale: 1.5 });

@@ -22,7 +22,7 @@ export default function PDFViewer({ url }: PDFViewerProps) {
       const context = canvas.getContext('2d');
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-      await page.render({ canvasContext: context!, viewport }).promise;
+      await page.render({ canvasContext: context!, viewport, canvas }).promise;
     };
     renderPDF();
   }, [url]);

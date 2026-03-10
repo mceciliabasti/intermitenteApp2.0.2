@@ -8,6 +8,7 @@ interface PDFViewerProps {
   url: string;
 }
 
+export default function PDFViewer({ url }: PDFViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
 

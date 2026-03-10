@@ -1,6 +1,5 @@
+"use client";
 import PDFViewer from '@/components/PDFViewer';
-'use client';
-
 import { useState, useEffect } from 'react';
 import AdminNavBar from '@/components/AdminNavBar';
 import Toast from '@/components/Toast';

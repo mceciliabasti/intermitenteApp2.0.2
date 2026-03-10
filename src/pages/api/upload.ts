@@ -41,10 +41,15 @@ export default async function handler(
         const data = fs.readFileSync(file.filepath);
         const base64 = data.toString('base64');
         const dataUri = `data:${file.mimetype};base64,${base64}`;
+        const isPDF = file.mimetype === 'application/pdf';
+        const baseName = file.originalFilename.replace(/\.[^/.]+$/, '');
+        const publicId = isPDF
+          ? `${Date.now()}-${baseName}.pdf`
+          : `${Date.now()}-${baseName}`;
         const result = await cloudinary.uploader.upload(dataUri, {
-          resource_type: file.mimetype === 'application/pdf' ? 'raw' : 'auto',
+          resource_type: isPDF ? 'raw' : 'auto',
           folder: 'materials',
-          public_id: `${Date.now()}-${file.originalFilename.replace(/\.[^/.]+$/, '')}`,
+          public_id: publicId,
         });
         res.status(200).json({ url: result.secure_url });
       } catch (error) {

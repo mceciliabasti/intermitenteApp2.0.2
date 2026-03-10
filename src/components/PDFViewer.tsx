@@ -8,7 +8,6 @@ interface PDFViewerProps {
   url: string;
 }
 
-export default function PDFViewer({ url }: PDFViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,7 +15,12 @@ export default function PDFViewer({ url }: PDFViewerProps) {
     setError(null);
     const renderPDF = async () => {
       try {
-        const loadingTask = pdfjsLib.getDocument(url);
+        // Fetch PDF as blob
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('No se pudo descargar el PDF');
+        const blob = await response.blob();
+        const arrayBuffer = await blob.arrayBuffer();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
         const page = await pdf.getPage(1);
         const viewport = page.getViewport({ scale: 1.5 });

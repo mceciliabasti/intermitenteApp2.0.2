@@ -51,7 +51,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#9F3082' }}>
       <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md border border-gray-300">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600 mb-2">Intermitente - Club de Arte</h1>
+            <h1 className="text-4xl font-bold text-indigo-600 mb-2">Intermitente <br />Club de Arte</h1>
           <p className="text-gray-600">Iniciar Sesión</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -78,9 +78,9 @@ export default function LoginPage() {
             />
           </div>
           {error && <p className="text-red-600 font-semibold bg-red-50 p-3 rounded-lg">{error}</p>}
-          <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-200 transform hover:scale-105">
-            Iniciar Sesión
-          </button>
+            <button type="submit" className="w-full bg-gray-400 text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-200 transform hover:scale-105">
+              Iniciar Sesión
+            </button>
         </form>
       </div>
     </div>

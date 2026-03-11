@@ -107,21 +107,14 @@ export default function WorkshopContentPage() {
     try {
       let fileUrl = '';
       if (formData.file) {
-          const formDataUpload = new FormData();
-          formDataUpload.append('file', formData.file);
-          const uploadRes = await fetch('/api/upload', {
-            method: 'POST',
-            body: formDataUpload,
-          });
-          if (!uploadRes.ok) {
-            const errorData = await uploadRes.json();
-            setToast({ type: 'error', message: errorData.error + (errorData.details ? ': ' + errorData.details : '') });
-            setLoading(false);
-            return;
-          }
-          const uploadData = await uploadRes.json();
-          fileUrl = uploadData.url;
-        }
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', formData.file);
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formDataUpload,
+        });
+        const uploadData = await uploadRes.json();
+        fileUrl = uploadData.url;
       } else {
         setToast({ type: 'error', message: 'Por favor selecciona un archivo' });
         setLoading(false);

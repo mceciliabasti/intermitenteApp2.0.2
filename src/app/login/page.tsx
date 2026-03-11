@@ -48,8 +48,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center p-4">
-      <div className="bg192.jpgpng-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#9F3082' }}>
+      <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md border border-gray-300">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-indigo-600 mb-2">Intermitente - Club de Arte</h1>
           <p className="text-gray-600">Iniciar Sesión</p>

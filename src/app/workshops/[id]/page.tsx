@@ -67,11 +67,11 @@ export default function WorkshopDetail() {
         <p className="text-gray-700 mb-6">{workshop.description}</p>
 
         {/* Tabs for categories */}
-        <div className="mb-6 border-b border-gray-200 flex gap-2">
+        <div className="mb-6 border-b border-gray-200 flex flex-wrap gap-2">
           {sectionKeys.map((key) => (
             <button
               key={key}
-              className={`px-4 py-2 -mb-px border-b-2 font-semibold capitalize focus:outline-none transition-colors duration-200 ${activeTab === key ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-gray-500 hover:text-indigo-600'}`}
+              className={`px-5 py-2 text-base sm:text-lg rounded-t-lg capitalize focus:outline-none transition-colors duration-200 ${activeTab === key ? 'bg-indigo-100 border-b-2 border-indigo-600 !text-black font-bold' : 'bg-white border-b-2 border-transparent text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 font-semibold'}`}
               onClick={() => setActiveTab(key)}
             >
               {key}
@@ -87,15 +87,15 @@ export default function WorkshopDetail() {
             </div>
             <div className="grid gap-4">
               {(sections[activeTab] || []).filter((it: any) => it.enabled).map((it: any) => (
-                <div key={it._id || it.fileUrl} className="p-3 border rounded flex justify-between items-center">
-                  <div>
-                    <div className="font-semibold">{it.title}</div>
-                    <div className="text-sm text-gray-600">{it.type}</div>
+                <div key={it._id || it.fileUrl} className="p-3 border rounded flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-gray-50">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold truncate text-lg" title={it.title}>{it.title}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">{it.type}</div>
                   </div>
                   {it.type === 'audio' ? (
-                    <div className="flex gap-2">
-                      <button onClick={() => addTracks([{ id: it._id || it.fileUrl, title: it.title, fileUrl: it.fileUrl }])} className="bg-blue-500 text-white px-3 py-1 rounded">Agregar</button>
-                      <audio controls src={it.fileUrl} className="h-8" preload="none" controlsList="nodownload" />
+                    <div className="flex flex-col sm:flex-row gap-2 items-center w-full sm:w-auto">
+                      <button onClick={() => addTracks([{ id: it._id || it.fileUrl, title: it.title, fileUrl: it.fileUrl }])} className="bg-indigo-600 text-white px-4 py-1 rounded shadow hover:bg-indigo-700 transition">Agregar</button>
+                      <audio controls src={it.fileUrl} className="w-full sm:w-64 h-10" preload="none" controlsList="nodownload" />
                     </div>
                   ) : it.type === 'video' ? (
                     <a href={it.fileUrl} target="_blank" rel="noreferrer" className="text-indigo-600">Ver video</a>

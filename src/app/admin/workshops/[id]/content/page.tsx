@@ -107,32 +107,6 @@ export default function WorkshopContentPage() {
     try {
       let fileUrl = '';
       if (formData.file) {
-        // Vercel limit: 5MB. If file is larger, upload directly to Cloudinary
-        if (formData.file.size > 5 * 1024 * 1024) {
-          setToast({ type: 'info', message: 'Archivo mayor a 5MB, se subirá directo a Cloudinary.' });
-          const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-          const unsignedPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_PRESET;
-          if (!cloudName || !unsignedPreset) {
-            setToast({ type: 'error', message: 'Faltan variables de entorno para Cloudinary.' });
-            setLoading(false);
-            return;
-          }
-          const formDataUpload = new FormData();
-          formDataUpload.append('file', formData.file);
-          formDataUpload.append('upload_preset', unsignedPreset);
-          const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
-          const uploadRes = await fetch(cloudinaryUrl, {
-            method: 'POST',
-            body: formDataUpload,
-          });
-          const uploadData = await uploadRes.json();
-          if (!uploadRes.ok) {
-            setToast({ type: 'error', message: uploadData.error?.message || 'Error al subir a Cloudinary' });
-            setLoading(false);
-            return;
-          }
-          fileUrl = uploadData.secure_url;
-        } else {
           const formDataUpload = new FormData();
           formDataUpload.append('file', formData.file);
           const uploadRes = await fetch('/api/upload', {

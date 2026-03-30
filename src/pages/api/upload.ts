@@ -62,6 +62,10 @@ export default async function handler(
           // Subir a Supabase Storage
           const bucket = 'pdf';
           const fileName = `${Date.now()}-${file.originalFilename}`;
+          if (!supabase) {
+            res.status(500).json({ error: 'Supabase client not initialized' });
+            return;
+          }
           try {
             const { data: uploadData, error } = await supabase.storage.from(bucket).upload(fileName, data, {
               contentType: file.mimetype,

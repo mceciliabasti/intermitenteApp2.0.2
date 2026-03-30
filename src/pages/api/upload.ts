@@ -43,9 +43,10 @@ export default async function handler(
       return;
     }
     // Helper para parsear formidable con promesa
+    // IMPORTANTE: Si necesitas subir archivos de más de 10MB, cambia maxFileSize aquí y revisa el límite de Vercel (por defecto 4MB para serverless functions, 100MB para edge functions o storage). Más info: https://vercel.com/docs/limits/overview#serverless-function-payload-size
     function parseForm(req: NextApiRequest): Promise<{ fields: any; files: any }> {
       return new Promise((resolve, reject) => {
-        const form = new formidable.IncomingForm({ maxFileSize: 10 * 1024 * 1024 });
+        const form = new formidable.IncomingForm({ maxFileSize: 10 * 1024 * 1024 }); // Puedes aumentar este valor
         form.parse(req, (err: any, fields: any, files: any) => {
           if (err) reject(err);
           else resolve({ fields, files });

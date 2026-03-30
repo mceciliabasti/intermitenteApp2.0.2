@@ -5,13 +5,18 @@ import dbConnect from '@/lib/mongodb';
 import Material from '@/models/Material';
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'admin') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    await dbConnect();
+    const materials = await Material.find().sort({ createdAt: -1 });
+    return NextResponse.json(materials);
+  } catch (err) {
+    console.error('GET /api/admin/materials error:', err);
+    return NextResponse.json({ error: 'Internal server error', details: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }
-  await dbConnect();
-  const materials = await Material.find().sort({ createdAt: -1 });
-  return NextResponse.json(materials);
 }
 
 export async function POST(request: NextRequest) {

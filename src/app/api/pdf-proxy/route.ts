@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // Use service role key for backend access
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 

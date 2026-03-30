@@ -46,7 +46,7 @@ export default async function handler(
     function parseForm(req: NextApiRequest): Promise<{ fields: any; files: any }> {
       return new Promise((resolve, reject) => {
         const form = new formidable.IncomingForm({ maxFileSize: 10 * 1024 * 1024 });
-        form.parse(req, (err, fields, files) => {
+        form.parse(req, (err: any, fields: any, files: any) => {
           if (err) reject(err);
           else resolve({ fields, files });
         });

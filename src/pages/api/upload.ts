@@ -7,7 +7,7 @@ const formidable = require('formidable');
 import fs from 'fs';
 
 // Validar variables de entorno necesarias
-const missingVars = [];
+const missingVars: string[] = [];
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
 if (!process.env.SUPABASE_SERVICE_ROLE_KEY) missingVars.push('SUPABASE_SERVICE_ROLE_KEY');
 if (!process.env.CLOUDINARY_CLOUD_NAME) missingVars.push('CLOUDINARY_CLOUD_NAME');

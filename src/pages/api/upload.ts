@@ -93,7 +93,3 @@ export default async function handler(
     }
   }
 }
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: (error as Error).message });
-  }
-}

@@ -1,9 +1,32 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { v2 as cloudinary } from 'cloudinary';
 import { createClient } from '@supabase/supabase-js';
 const formidable = require('formidable');
 import fs from 'fs';
+
+// Validar variables de entorno necesarias
+const missingVars = [];
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) missingVars.push('SUPABASE_SERVICE_ROLE_KEY');
+if (!process.env.CLOUDINARY_CLOUD_NAME) missingVars.push('CLOUDINARY_CLOUD_NAME');
+if (!process.env.CLOUDINARY_API_KEY) missingVars.push('CLOUDINARY_API_KEY');
+if (!process.env.CLOUDINARY_API_SECRET) missingVars.push('CLOUDINARY_API_SECRET');
+
+let supabase: ReturnType<typeof createClient> | null = null;
+if (missingVars.length === 0) {
+  supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,6 +43,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (missingVars.length > 0) {
+    res.status(500).json({ error: 'Missing environment variables', missing: missingVars });
+    return;
+  }
   try {
     if (req.method !== 'POST') {
       res.status(405).json({ error: 'Method not allowed' });

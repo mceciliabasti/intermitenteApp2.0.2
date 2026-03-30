@@ -16,12 +16,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export const config = {
-  api: {
-    bodyParser: false,
-    sizeLimit: '10mb',
-  },
-};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -86,10 +80,19 @@ export default async function handler(
           });
           res.status(200).json({ url: result.secure_url });
         }
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to upload file', details: (error as Error).message });
+      } catch (err) {
+        console.error('Unexpected error in upload handler:', err);
+        res.status(500).json({ error: 'Unexpected error in upload handler', details: (err instanceof Error ? err.message : String(err)) });
       }
     });
+  } catch (err) {
+    // Manejo global de errores para cualquier excepción inesperada
+    console.error('Global API error:', err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Unexpected global error in API route', details: (err instanceof Error ? err.message : String(err)) });
+    }
+  }
+}
   } catch (error) {
     res.status(500).json({ error: 'Internal server error', details: (error as Error).message });
   }

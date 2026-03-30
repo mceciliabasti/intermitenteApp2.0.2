@@ -1,5 +1,7 @@
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v2 as cloudinary } from 'cloudinary';
+import { createClient } from '@supabase/supabase-js';
 const formidable = require('formidable');
 import fs from 'fs';
 
@@ -8,6 +10,11 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export const config = {
   api: {
@@ -39,19 +46,46 @@ export default async function handler(
           return;
         }
         const data = fs.readFileSync(file.filepath);
-        const base64 = data.toString('base64');
-        const dataUri = `data:${file.mimetype};base64,${base64}`;
         const isPDF = file.mimetype === 'application/pdf';
-        const baseName = file.originalFilename.replace(/\.[^/.]+$/, '');
-        const publicId = isPDF
-          ? `${Date.now()}-${baseName}.pdf`
-          : `${Date.now()}-${baseName}`;
-        const result = await cloudinary.uploader.upload(dataUri, {
-          resource_type: isPDF ? 'raw' : 'auto',
-          folder: 'materials',
-          public_id: publicId,
-        });
-        res.status(200).json({ url: result.secure_url });
+        if (isPDF) {
+          // Subir a Supabase Storage
+          const bucket = 'pdf';
+          const fileName = `${Date.now()}-${file.originalFilename}`;
+          try {
+            const { data: uploadData, error } = await supabase.storage.from(bucket).upload(fileName, data, {
+              contentType: file.mimetype,
+              upsert: false,
+            });
+            if (error) {
+              console.error('Supabase upload error:', error);
+              res.status(500).json({ error: 'Failed to upload PDF to Supabase', details: error.message });
+              return;
+            }
+            // Obtener URL pública
+            const { data: publicUrl, error: urlError } = supabase.storage.from(bucket).getPublicUrl(fileName);
+            if (urlError) {
+              console.error('Supabase getPublicUrl error:', urlError);
+              res.status(500).json({ error: 'Failed to get public URL from Supabase', details: urlError.message });
+              return;
+            }
+            res.status(200).json({ url: publicUrl.publicUrl });
+          } catch (err) {
+            console.error('Unexpected error uploading PDF to Supabase:', err);
+            res.status(500).json({ error: 'Unexpected error uploading PDF to Supabase', details: (err instanceof Error ? err.message : String(err)) });
+          }
+        } else {
+          // Subir a Cloudinary
+          const base64 = data.toString('base64');
+          const dataUri = `data:${file.mimetype};base64,${base64}`;
+          const baseName = file.originalFilename.replace(/\.[^/.]+$/, '');
+          const publicId = `${Date.now()}-${baseName}`;
+          const result = await cloudinary.uploader.upload(dataUri, {
+            resource_type: 'auto',
+            folder: 'materials',
+            public_id: publicId,
+          });
+          res.status(200).json({ url: result.secure_url });
+        }
       } catch (error) {
         res.status(500).json({ error: 'Failed to upload file', details: (error as Error).message });
       }

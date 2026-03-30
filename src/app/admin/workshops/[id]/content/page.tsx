@@ -1,5 +1,5 @@
 "use client";
-import PDFViewer from '@/components/PDFViewer';
+// import PDFViewer from '@/components/PDFViewer';
 import { useState, useEffect } from 'react';
 import AdminNavBar from '@/components/AdminNavBar';
 import Toast from '@/components/Toast';
@@ -450,7 +450,14 @@ export default function WorkshopContentPage() {
                         <video controls src={item.fileUrl} className="w-full max-h-60" />
                       )}
                       {item.type === 'pdf' && (
-                        <PDFViewer url={item.fileUrl} />
+                        <a
+                          href={item.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        >
+                          Abrir PDF en nueva pestaña
+                        </a>
                       )}
                       {item.type === 'image' && (
                         <img src={item.fileUrl} alt={item.title} className="w-full rounded" />

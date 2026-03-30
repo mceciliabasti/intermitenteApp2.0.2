@@ -62,10 +62,10 @@ export default async function handler(
               return;
             }
             // Obtener URL pública
-            const { data: publicUrl, error: urlError } = supabase.storage.from(bucket).getPublicUrl(fileName);
-            if (urlError) {
-              console.error('Supabase getPublicUrl error:', urlError);
-              res.status(500).json({ error: 'Failed to get public URL from Supabase', details: urlError.message });
+            const { data: publicUrl } = supabase.storage.from(bucket).getPublicUrl(fileName);
+            if (!publicUrl || !publicUrl.publicUrl) {
+              console.error('Supabase getPublicUrl error: No public URL returned');
+              res.status(500).json({ error: 'Failed to get public URL from Supabase' });
               return;
             }
             res.status(200).json({ url: publicUrl.publicUrl });

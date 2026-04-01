@@ -1,5 +1,4 @@
 "use client";
-import PDFViewer from '@/components/PDFViewer';
 import { useState, useEffect } from 'react';
 import AdminNavBar from '@/components/AdminNavBar';
 import Toast from '@/components/Toast';
@@ -97,6 +96,7 @@ export default function WorkshopContentPage() {
     }
   };
 
+  // Nueva lógica de subida de archivos
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, file: e.target.files?.[0] || null });
   };
@@ -106,17 +106,36 @@ export default function WorkshopContentPage() {
     setLoading(true);
     try {
       let fileUrl = '';
-      if (formData.file) {
-        const formDataUpload = new FormData();
-        formDataUpload.append('file', formData.file);
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formDataUpload,
-        });
-        const uploadData = await uploadRes.json();
-        fileUrl = uploadData.url;
-      } else {
+      if (!formData.file) {
         setToast({ type: 'error', message: 'Por favor selecciona un archivo' });
+        setLoading(false);
+        return;
+      }
+      const file = formData.file;
+      const allowedTypes: Record<string, string[]> = {
+        audio: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg'],
+        video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
+        image: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+        pdf: ['application/pdf'],
+      };
+      const expectedTypes = allowedTypes[formData.type] || [];
+      if (!expectedTypes.includes(file.type)) {
+        setToast({ type: 'error', message: `El archivo seleccionado no es un ${formData.type} válido.` });
+        setLoading(false);
+        return;
+      }
+
+      // Subida directa según tipo
+      try {
+        if (formData.type === 'pdf') {
+          const { uploadPdfToSupabase } = await import('@/lib/uploadPdfToSupabase');
+          fileUrl = await uploadPdfToSupabase(file);
+        } else {
+          const { uploadToCloudinary } = await import('@/lib/uploadToCloudinary');
+          fileUrl = await uploadToCloudinary(file);
+        }
+      } catch (err: any) {
+        setToast({ type: 'error', message: err?.message || 'Error al subir el archivo.' });
         setLoading(false);
         return;
       }
@@ -128,17 +147,19 @@ export default function WorkshopContentPage() {
         enabled: formData.enabled,
         tags: formData.tags.split(',').map((t: string) => t.trim()).filter(t => t),
       };
-      
+
       const res = await fetch(`/api/admin/workshops/${id}/content`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ section: selectedSection, content }),
       });
-      
+
       if (res.ok) {
         fetchWorkshop();
         setShowForm(false);
         setFormData({ title: '', type: 'audio', file: null, enabled: true, tags: '' });
+      } else {
+        setToast({ type: 'error', message: 'Error al guardar el material en la base de datos.' });
       }
     } catch (error) {
       console.error('Error uploading content:', error);
@@ -148,6 +169,7 @@ export default function WorkshopContentPage() {
     }
   };
 
+  // Lógica de edición de archivo
   const handleEditFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditFormData({ ...editFormData, file: e.target.files?.[0] || null });
   };
@@ -172,14 +194,32 @@ export default function WorkshopContentPage() {
     try {
       let fileUrl = undefined as string | undefined;
       if (editFormData.file) {
-        const formDataUpload = new FormData();
-        formDataUpload.append('file', editFormData.file);
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formDataUpload,
-        });
-        const uploadData = await uploadRes.json();
-        fileUrl = uploadData.url;
+        const file = editFormData.file;
+        const allowedTypes: Record<string, string[]> = {
+          audio: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg'],
+          video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
+          image: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+          pdf: ['application/pdf'],
+        };
+        const expectedTypes = allowedTypes[editFormData.type] || [];
+        if (!expectedTypes.includes(file.type)) {
+          setToast({ type: 'error', message: `El archivo seleccionado no es un ${editFormData.type} válido.` });
+          setEditLoading(false);
+          return;
+        }
+        try {
+          if (editFormData.type === 'pdf') {
+            const { uploadPdfToSupabase } = await import('@/lib/uploadPdfToSupabase');
+            fileUrl = await uploadPdfToSupabase(file);
+          } else {
+            const { uploadToCloudinary } = await import('@/lib/uploadToCloudinary');
+            fileUrl = await uploadToCloudinary(file);
+          }
+        } catch (err: any) {
+          setToast({ type: 'error', message: err?.message || 'Error al subir el archivo.' });
+          setEditLoading(false);
+          return;
+        }
       }
 
       const contentUpdate: any = {
@@ -201,8 +241,7 @@ export default function WorkshopContentPage() {
         setShowEditForm(false);
         setEditingItemId(null);
       } else {
-        console.error('Failed to update content', await res.text());
-        setToast({ type: 'error', message: 'Error al actualizar el material' });
+        setToast({ type: 'error', message: 'Error al actualizar el material en la base de datos.' });
       }
     } catch (error) {
       console.error('Error updating content:', error);
@@ -450,7 +489,14 @@ export default function WorkshopContentPage() {
                         <video controls src={item.fileUrl} className="w-full max-h-60" />
                       )}
                       {item.type === 'pdf' && (
-                        <PDFViewer url={item.fileUrl} />
+                        <a
+                          href={item.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        >
+                          Abrir PDF en nueva pestaña
+                        </a>
                       )}
                       {item.type === 'image' && (
                         <img src={item.fileUrl} alt={item.title} className="w-full rounded" />

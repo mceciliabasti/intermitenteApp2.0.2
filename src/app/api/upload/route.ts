@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       form.parse(
         { ...req, url: '', headers: plainHeaders, method: 'POST',
           on: function() { return this; },
-          pipe: function() { return this; },
+          pipe: function<T extends NodeJS.WritableStream>(destination: T, _options?: { end?: boolean }) { return destination; },
           resume: function() { return this; },
           readable: true,
           // @ts-ignore

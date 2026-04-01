@@ -9,7 +9,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function uploadPdfToSupabase(file) {
+export async function uploadPdfToSupabase(file: File) {
   const bucket = 'pdf';
   const fileName = `${Date.now()}-${file.name}`;
   const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, {

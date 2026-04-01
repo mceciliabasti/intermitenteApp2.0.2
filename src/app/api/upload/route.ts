@@ -49,14 +49,14 @@ export async function POST(req: NextRequest) {
     await new Promise<void>((resolve, reject) => {
       form.parse(
         { ...req, url: '', headers: plainHeaders, method: 'POST',
-          on: () => {},
-          pipe: () => {},
-          resume: () => {},
+          on: function() { return this; },
+          pipe: function() { return this; },
+          resume: function() { return this; },
           readable: true,
           // @ts-ignore
-          _read: () => {},
+          _read: function() { return this; },
           // @ts-ignore
-          _destroy: () => {},
+          _destroy: function() { return this; },
           // @ts-ignore
           _readableState: {},
           // @ts-ignore

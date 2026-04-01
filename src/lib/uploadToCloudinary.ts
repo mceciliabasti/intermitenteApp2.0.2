@@ -1,6 +1,6 @@
 // Utilidad para subir archivos a Cloudinary desde el frontend
 // npm install cloudinary --save (solo si necesitas el SDK, pero usaremos fetch)
-export async function uploadToCloudinary(file) {
+export async function uploadToCloudinary(file: File) {
   // 1. Obtener firma segura del backend
   const sigRes = await fetch('/api/cloudinary-signature', { method: 'POST' });
   const { timestamp, signature, apiKey, cloudName, folder } = await sigRes.json();

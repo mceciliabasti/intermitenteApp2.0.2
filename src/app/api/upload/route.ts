@@ -41,9 +41,14 @@ export async function POST(req: NextRequest) {
     fs.writeFileSync(tempPath, Buffer.from(body));
     const form = formidable({ maxFileSize: 10 * 1024 * 1024 });
     let file: any = null;
+    // Convertir Headers (Web API) a objeto plano para formidable
+    const plainHeaders: Record<string, string> = {};
+    req.headers.forEach((value, key) => {
+      plainHeaders[key] = value;
+    });
     await new Promise<void>((resolve, reject) => {
       form.parse(
-        { ...req, url: '', headers: req.headers, method: 'POST',
+        { ...req, url: '', headers: plainHeaders, method: 'POST',
           on: () => {},
           pipe: () => {},
           resume: () => {},

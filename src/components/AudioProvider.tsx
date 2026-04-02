@@ -38,6 +38,7 @@ export const useAudio = () => {
 };
 
 export default function AudioProvider({ children }: { children: React.ReactNode }) {
+  const [playlistOpen, setPlaylistOpen] = useState(true);
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === 'admin';
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -172,16 +173,18 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
   return (
     <AudioContext.Provider value={value}>
       {children}
-      {/* Bottom fixed player */}
+      {/* Bottom fixed player barra minimizable */}
       {playlist.length > 0 && (
-        <div className="fixed left-0 right-0 bottom-0 bg-white border-t border-gray-200 shadow-lg px-4 py-3 space-y-2 z-50">
-          {/* Playlist visual (only for non-admin) */}
-          {!isAdmin && (
-            <PlaylistList playlist={playlist} currentIndex={currentIndex} playIndex={playIndex} setPlaylist={setPlaylist} />
-          )}
-
-          {/* Track title and info */}
-          <div className="flex justify-between items-center">
+        <div className={`fixed left-0 right-0 bottom-0 bg-white border-t border-gray-200 shadow-lg z-50 transition-all duration-300 ${playlistOpen ? 'h-auto py-3 px-4' : 'h-12 py-0 px-0'}`} style={{minHeight: playlistOpen ? undefined : 48}}>
+          <div className="flex items-center justify-between">
+            <button
+              className="p-1 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 mr-2"
+              style={{minWidth: 32, minHeight: 32}}
+              onClick={() => setPlaylistOpen((v) => !v)}
+              title={playlistOpen ? 'Minimizar playlist' : 'Mostrar playlist'}
+            >
+              {playlistOpen ? <span>&#x25BC;</span> : <span>&#x25B2;</span>}
+            </button>
             <div className="flex-1 min-w-0">
               {playlist[currentIndex] ? (
                 <div className="truncate font-semibold text-gray-900">
@@ -195,77 +198,82 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>
-
-          {/* Progress bar */}
-          <div className="w-full">
-            <input
-              type="range"
-              min="0"
-              max={duration || 0}
-              value={currentTime}
-              onChange={(e) => seek(parseFloat(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            />
-          </div>
-
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4 mt-2">
-            <button
-              onClick={prev}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl text-gray-700 focus:outline-none"
-              title="Anterior"
-            >
-              <span role="img" aria-label="Anterior">⏮️</span>
-            </button>
-            {isPlaying ? (
-              <button
-                onClick={pause}
-                className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-3xl shadow focus:outline-none"
-                title="Pausar"
-              >
-                <span role="img" aria-label="Pausar">⏸️</span>
-              </button>
-            ) : (
-              <button
-                onClick={play}
-                className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-3xl shadow focus:outline-none"
-                title="Reproducir"
-              >
-                <span role="img" aria-label="Reproducir">▶️</span>
-              </button>
-            )}
-            <button
-              onClick={next}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl text-gray-700 focus:outline-none"
-              title="Siguiente"
-            >
-              <span role="img" aria-label="Siguiente">⏭️</span>
-            </button>
-            <button
-              onClick={cycleRepeat}
-              className={`p-2 rounded-full border-2 focus:outline-none transition-colors duration-200 ${
-                repeatMode === "off"
-                  ? "border-gray-300 bg-white text-gray-400"
-                  : repeatMode === "all"
-                  ? "border-blue-600 bg-blue-50 text-blue-700"
-                  : "border-green-600 bg-green-50 text-green-700"
-              }`}
-              title={
-                repeatMode === "off"
-                  ? "Repetir: Ninguno"
-                  : repeatMode === "all"
-                  ? "Repetir: Todas"
-                  : "Repetir: Una"
-              }
-            >
-              {repeatMode === "off" && <span role="img" aria-label="No repetir">⭕</span>}
-              {repeatMode === "all" && <span role="img" aria-label="Repetir todas">🔁</span>}
-              {repeatMode === "one" && <span role="img" aria-label="Repetir una">🔂</span>}
-            </button>
-          </div>
+          {playlistOpen && (
+            <>
+              {/* Playlist visual (only for non-admin) */}
+              {!isAdmin && (
+                <PlaylistList playlist={playlist} currentIndex={currentIndex} playIndex={playIndex} setPlaylist={setPlaylist} />
+              )}
+              {/* Progress bar */}
+              <div className="w-full">
+                <input
+                  type="range"
+                  min="0"
+                  max={duration || 0}
+                  value={currentTime}
+                  onChange={(e) => seek(parseFloat(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                />
+              </div>
+              {/* Controls */}
+              <div className="flex items-center justify-center gap-4 mt-2">
+                <button
+                  onClick={prev}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl text-gray-700 focus:outline-none"
+                  title="Anterior"
+                >
+                  <span role="img" aria-label="Anterior">⏮️</span>
+                </button>
+                {isPlaying ? (
+                  <button
+                    onClick={pause}
+                    className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-3xl shadow focus:outline-none"
+                    title="Pausar"
+                  >
+                    <span role="img" aria-label="Pausar">⏸️</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={play}
+                    className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-3xl shadow focus:outline-none"
+                    title="Reproducir"
+                  >
+                    <span role="img" aria-label="Reproducir">▶️</span>
+                  </button>
+                )}
+                <button
+                  onClick={next}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl text-gray-700 focus:outline-none"
+                  title="Siguiente"
+                >
+                  <span role="img" aria-label="Siguiente">⏭️</span>
+                </button>
+                <button
+                  onClick={cycleRepeat}
+                  className={`p-2 rounded-full border-2 focus:outline-none transition-colors duration-200 ${
+                    repeatMode === "off"
+                      ? "border-gray-300 bg-white text-gray-400"
+                      : repeatMode === "all"
+                      ? "border-blue-600 bg-blue-50 text-blue-700"
+                      : "border-green-600 bg-green-50 text-green-700"
+                  }`}
+                  title={
+                    repeatMode === "off"
+                      ? "Repetir: Ninguno"
+                      : repeatMode === "all"
+                      ? "Repetir: Todas"
+                      : "Repetir: Una"
+                  }
+                >
+                  {repeatMode === "off" && <span role="img" aria-label="No repetir">⭕</span>}
+                  {repeatMode === "all" && <span role="img" aria-label="Repetir todas">🔁</span>}
+                  {repeatMode === "one" && <span role="img" aria-label="Repetir una">🔂</span>}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
-    {/* Componente para mostrar la playlist y permitir quitar pistas */}
     </AudioContext.Provider>
   );
 }

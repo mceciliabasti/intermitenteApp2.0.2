@@ -6,6 +6,8 @@ import { useAudio } from '@/components/AudioProvider';
 import StudentNavBar from '@/components/StudentNavBar';
 
 export default function WorkshopDetail() {
+  // Estado para el orden
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const params = useParams() as { id?: string };
   const id = params?.id;
@@ -84,9 +86,28 @@ export default function WorkshopDetail() {
           <div className="mb-8 bg-white p-6 rounded shadow text-gray-900">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold capitalize">{activeTab}</h2>
+              <div className="flex gap-2 items-center">
+                <span className="font-semibold">Ordenar:</span>
+                <button
+                  className={`px-3 py-1 rounded ${sortOrder === 'asc' ? 'bg-white text-indigo-600 font-bold' : 'bg-indigo-200 text-indigo-800'}`}
+                  onClick={() => setSortOrder('asc')}
+                  aria-label="Orden ascendente"
+                >A-Z</button>
+                <button
+                  className={`px-3 py-1 rounded ${sortOrder === 'desc' ? 'bg-white text-indigo-600 font-bold' : 'bg-indigo-200 text-indigo-800'}`}
+                  onClick={() => setSortOrder('desc')}
+                  aria-label="Orden descendente"
+                >Z-A</button>
+              </div>
             </div>
             <div className="grid gap-4">
-              {(sections[activeTab] || []).filter((it: any) => it.enabled).map((it: any) => (
+              {((sections[activeTab] || [])
+                .filter((it: any) => it.enabled)
+                .sort((a: any, b: any) => sortOrder === 'asc'
+                  ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
+                  : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
+                )
+              ).map((it: any) => (
                 <div key={it._id || it.fileUrl} className="p-3 border rounded flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-gray-50">
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold truncate text-lg" title={it.title}>{it.title}</div>

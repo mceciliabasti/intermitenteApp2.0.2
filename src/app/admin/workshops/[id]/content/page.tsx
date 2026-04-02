@@ -43,6 +43,8 @@ const sectionAllowedTypes: Record<string, string[]> = {
 };
 
 export default function WorkshopContentPage() {
+  // Estado para el orden
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const [workshop, setWorkshop] = useState<Workshop | null>(null);
@@ -281,7 +283,12 @@ export default function WorkshopContentPage() {
   if (!workshop) return <div className="flex items-center justify-center min-h-screen text-lg">Cargando...</div>;
 
   const sections = ['pistas', 'referencias', 'coreos', 'guion', 'vestuario'] as const;
-  const currentSectionContent = workshop.sections[selectedSection as keyof typeof workshop.sections];
+  // Ordenar materiales por nombre
+  const currentSectionContent = [...workshop.sections[selectedSection as keyof typeof workshop.sections]]
+    .sort((a, b) => sortOrder === 'asc'
+      ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
+      : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
+    );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -449,9 +456,24 @@ export default function WorkshopContentPage() {
 
         {/* Content List */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6">
-            <h2 className="text-2xl font-bold">{sectionInfo[selectedSection as keyof typeof sectionInfo].label}</h2>
-            <p className="text-indigo-100 mt-1">{sectionInfo[selectedSection as keyof typeof sectionInfo].description}</p>
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold">{sectionInfo[selectedSection as keyof typeof sectionInfo].label}</h2>
+              <p className="text-indigo-100 mt-1">{sectionInfo[selectedSection as keyof typeof sectionInfo].description}</p>
+            </div>
+            <div className="flex gap-2 items-center">
+              <span className="font-semibold">Ordenar:</span>
+              <button
+                className={`px-3 py-1 rounded ${sortOrder === 'asc' ? 'bg-white text-indigo-600 font-bold' : 'bg-indigo-200 text-indigo-800'}`}
+                onClick={() => setSortOrder('asc')}
+                aria-label="Orden ascendente"
+              >A-Z</button>
+              <button
+                className={`px-3 py-1 rounded ${sortOrder === 'desc' ? 'bg-white text-indigo-600 font-bold' : 'bg-indigo-200 text-indigo-800'}`}
+                onClick={() => setSortOrder('desc')}
+                aria-label="Orden descendente"
+              >Z-A</button>
+            </div>
           </div>
 
           <div className="p-6">

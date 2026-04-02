@@ -48,7 +48,7 @@ export function PlaylistList({ playlist, currentIndex, playIndex, setPlaylist }:
           <li key={track.id} className={`flex items-center px-2 py-1 gap-2 ${i === currentIndex ? 'bg-indigo-50' : ''}`}>
             <input type="checkbox" checked={selected.has(track.id)} onChange={() => toggleSelect(track.id)} />
             <span className={`flex-1 truncate cursor-pointer ${i === currentIndex ? 'font-bold text-indigo-700' : ''}`} onClick={() => playIndex(i)} title={track.title}>{track.title}</span>
-            <button onClick={() => removeOne(track.id)} className="text-xs text-red-500 hover:text-red-700 ml-2">✕</button>
+            <button onClick={() => removeOne(track.id)} className="text-xs bg-red-600 text-white hover:bg-red-700 ml-2 rounded px-2 py-1">✕</button>
           </li>
         ))}
       </ul>

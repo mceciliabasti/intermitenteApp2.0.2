@@ -103,10 +103,12 @@ export default function WorkshopDetail() {
             <div className="grid gap-4">
               {((sections[activeTab] || [])
                 .filter((it: any) => it.enabled)
-                .sort((a: any, b: any) => sortOrder === 'asc'
-                  ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
-                  : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
-                )
+                .sort((a: any, b: any) => {
+                  const pad = (title: string) => title.replace(/^(\d)(\s|-)/, '0$1$2');
+                  return sortOrder === 'asc'
+                    ? pad(a.title).localeCompare(pad(b.title), 'es', { sensitivity: 'base' })
+                    : pad(b.title).localeCompare(pad(a.title), 'es', { sensitivity: 'base' });
+                })
               ).map((it: any) => (
                 <div key={it._id || it.fileUrl} className="p-3 border rounded flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-gray-50">
                   <div className="flex-1 min-w-0">

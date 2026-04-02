@@ -38,7 +38,7 @@ export default function AdminNavBar({ title, backLink, actionButton }: AdminNavB
             </div>
           )}
           <div className="flex items-center gap-4">
-            <button onClick={() => signOut()} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200">
+            <button onClick={() => signOut()} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200" style={{color:'#fff', fontWeight:600}}>
               Cerrar Sesión
             </button>
             {/* Hamburger menu button for mobile */}
@@ -54,6 +54,7 @@ export default function AdminNavBar({ title, backLink, actionButton }: AdminNavB
               <button 
                 onClick={actionButton.onClick} 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200 w-full md:w-auto"
+                style={{color:'#fff', fontWeight:600}}
               >
                 {actionButton.label}
               </button>
@@ -63,28 +64,28 @@ export default function AdminNavBar({ title, backLink, actionButton }: AdminNavB
 
         {/* Desktop navigation links */}
         <div className="flex gap-6 overflow-x-auto pb-2 hidden md:flex">
-          <button onClick={() => router.push('/admin')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             🏠 Inicio
           </button>
-          <button onClick={() => router.push('/admin/workshops')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/workshops')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             🎭 Talleres
           </button>
-          <button onClick={() => router.push('/admin/users')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/users')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             👥 Usuarios
           </button>
-          <button onClick={() => router.push('/admin/enroll')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/enroll')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             ✅ Inscribir
           </button>
-          <button onClick={() => router.push('/admin/enrollments')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/enrollments')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             📊 Ver Inscripciones
           </button>
-          <button onClick={() => router.push('/admin/accredit-payments')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/accredit-payments')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             💸 Acreditar Pagos
           </button>
-          <button onClick={() => router.push('/admin/materials')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/admin/materials')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             📚 Materiales
           </button>
-          <button onClick={() => router.push('/profile')} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+          <button onClick={() => router.push('/profile')} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
             👤 Perfil
           </button>
         </div>
@@ -92,28 +93,28 @@ export default function AdminNavBar({ title, backLink, actionButton }: AdminNavB
         {/* Mobile hamburger menu */}
         {menuOpen && (
           <div className="flex flex-col gap-2 mt-2 md:hidden bg-white rounded shadow p-4">
-            <button onClick={() => { setMenuOpen(false); router.push('/admin'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               🏠 Inicio
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/workshops'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/workshops'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               🎭 Talleres
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/users'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/users'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               👥 Usuarios
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/enroll'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/enroll'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               ✅ Inscribir
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/enrollments'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/enrollments'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               📊 Ver Inscripciones
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/accredit-payments'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/accredit-payments'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               💸 Acreditar Pagos
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/admin/materials'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/admin/materials'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               📚 Materiales
             </button>
-            <button onClick={() => { setMenuOpen(false); router.push('/profile'); }} className="text-gray-600 hover:text-indigo-600 font-semibold whitespace-nowrap">
+            <button onClick={() => { setMenuOpen(false); router.push('/profile'); }} className="hover:text-indigo-600 font-semibold whitespace-nowrap" style={{color: '#111', fontWeight: 600}}>
               👤 Perfil
             </button>
           </div>

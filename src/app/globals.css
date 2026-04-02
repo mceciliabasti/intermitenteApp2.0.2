@@ -53,8 +53,22 @@ label {
   font-weight: 600 !important;
 }
 
-button {
-  color: #ffffff !important;
+
+/* Botones con fondo oscuro: texto blanco */
+.btn-dark,
+.bg-indigo-600,
+.bg-red-600,
+.bg-black,
+.bg-gray-800 {
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+/* Botones claros: texto oscuro */
+.btn-light,
+.bg-white,
+.bg-gray-100 {
+  color: #111 !important;
   font-weight: 600 !important;
 }
 

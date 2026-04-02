@@ -284,10 +284,14 @@ export default function WorkshopContentPage() {
 
   const sections = ['pistas', 'referencias', 'coreos', 'guion', 'vestuario'] as const;
   // Ordenar materiales por nombre
+  const padMaterialTitle = (title: string) => {
+    // Si el título comienza con un número del 1 al 9 seguido de espacio o guion, lo paddeamos a dos cifras
+    return title.replace(/^(\d)(\s|-)/, '0$1$2');
+  };
   const currentSectionContent = [...workshop.sections[selectedSection as keyof typeof workshop.sections]]
     .sort((a, b) => sortOrder === 'asc'
-      ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
-      : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
+      ? padMaterialTitle(a.title).localeCompare(padMaterialTitle(b.title), 'es', { sensitivity: 'base' })
+      : padMaterialTitle(b.title).localeCompare(padMaterialTitle(a.title), 'es', { sensitivity: 'base' })
     );
 
   return (

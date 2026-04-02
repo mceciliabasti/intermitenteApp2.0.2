@@ -130,7 +130,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex gap-4 mt-4">
               <button onClick={() => setSection('edit')} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Editar datos</button>
-              <button onClick={() => setSection('password')} className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cambiar contraseña</button>
+              <button onClick={() => setSection('password')} className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 text-white">Cambiar contraseña</button>
             </div>
           </div>
         )}
@@ -157,10 +157,10 @@ export default function ProfilePage() {
               <input name="email" value={form.email} disabled className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-500" />
             </div>
             <div className="flex gap-4 mt-4">
-              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" disabled={saving}>
+              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-white" disabled={saving}>
                 {saving ? 'Guardando...' : 'Guardar cambios'}
               </button>
-              <button type="button" onClick={() => setSection('view')} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Cancelar</button>
+              <button type="button" onClick={() => setSection('view')} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 text-white">Cancelar</button>
             </div>
             {success && <div className="text-green-600 mt-2">Datos actualizados correctamente.</div>}
             {error && <div className="text-red-600 mt-2">{error}</div>}

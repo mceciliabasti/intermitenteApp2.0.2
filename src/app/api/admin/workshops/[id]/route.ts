@@ -28,7 +28,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   await dbConnect();
   const { id } = await params;
   const body = await request.json();
-  const workshop = await Workshop.findByIdAndUpdate(id, body, { new: true });
+  // Never overwrite sections from the generic workshop edit form.
+  const updatePayload = {
+    name: body.name,
+    description: body.description,
+    picture: body.picture,
+    type: body.type,
+    startDate: body.startDate,
+    endDate: body.endDate,
+    capacity: body.capacity,
+    instructor: body.instructor,
+    installments: body.installments,
+    enabled: body.enabled,
+  };
+  const workshop = await Workshop.findByIdAndUpdate(id, updatePayload, { new: true });
   if (!workshop) {
     return NextResponse.json({ error: 'Workshop not found' }, { status: 404 });
   }

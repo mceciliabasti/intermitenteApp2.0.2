@@ -79,8 +79,10 @@ export default function WorkshopsPage() {
         return;
       }
       const uploadData = await uploadRes.json();
-      // Ensure pictureUrl is always /uploads/filename
-      if (uploadData.url && uploadData.url.startsWith('/uploads/')) {
+      // Accept absolute URLs (Cloudinary/Supabase) and local /uploads paths.
+      if (uploadData.url && /^https?:\/\//.test(uploadData.url)) {
+        pictureUrl = uploadData.url;
+      } else if (uploadData.url && uploadData.url.startsWith('/uploads/')) {
         pictureUrl = uploadData.url;
       } else if (uploadData.url) {
         pictureUrl = `/uploads/${uploadData.url}`;
@@ -88,8 +90,8 @@ export default function WorkshopsPage() {
         pictureUrl = '';
       }
     }
-    // Ensure all required fields are present and valid
-    const body = {
+    // Ensure all required fields are present and valid.
+    const baseBody = {
       name: formData.name,
       description: formData.description || '',
       picture: pictureUrl,
@@ -100,14 +102,19 @@ export default function WorkshopsPage() {
       instructor: String(formData.instructor),
       installments: Number(formData.installments),
       enabled: !!formData.enabled,
-      sections: {
-        pistas: [],
-        referencias: [],
-        coreos: [],
-        guion: [],
-        vestuario: [],
-      },
     };
+    const body = editingWorkshop
+      ? baseBody
+      : {
+          ...baseBody,
+          sections: {
+            pistas: [],
+            referencias: [],
+            coreos: [],
+            guion: [],
+            vestuario: [],
+          },
+        };
     // Log body for debugging
     console.log('Workshop creation payload:', body);
     const response = await fetch(url, {
@@ -222,41 +229,71 @@ export default function WorkshopsPage() {
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
                   />
                 </div>
-                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-indigo-200">
-                  <table className="w-full min-w-[700px]">
-                    <thead>
-                      <tr>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Nombre</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Coach</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Tipo</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Inicio</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Fin</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Capacidad</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Cuotas</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Estado</th>
-                        <th className="px-4 py-2 sm:px-2 sm:py-1 text-left text-base sm:text-xs">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orderedWorkshops.map((workshop) => (
-                        <tr key={workshop._id} className="border-b">
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.name}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.instructor}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.type}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.startDate}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.endDate}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.capacity}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.installments}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 text-gray-900 text-base sm:text-xs whitespace-nowrap">{workshop.enabled ? 'Activo' : 'Inactivo'}</td>
-                          <td className="px-4 py-2 sm:px-2 sm:py-1 flex flex-wrap gap-1">
-                            <button className="mr-2 px-3 py-1 sm:px-2 sm:py-1 bg-indigo-500 text-white rounded text-sm sm:text-xs" onClick={() => handleEdit(workshop)}>Editar</button>
-                            <button className="mr-2 px-3 py-1 sm:px-2 sm:py-1 bg-red-500 text-white rounded text-sm sm:text-xs" onClick={() => handleDelete(workshop._id)}>Eliminar</button>
-                            <button className="px-3 py-1 sm:px-2 sm:py-1 bg-green-500 text-white rounded text-sm sm:text-xs" onClick={() => handleShowStudents(workshop)}>Ver Alumnos</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="md:col-span-2">
+                  <label className="block text-gray-700 font-semibold mb-2">Descripción</label>
+                  <textarea
+                    placeholder="Descripción del taller"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    required
+                    rows={3}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Tipo</label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    required
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  >
+                    <option value="quarterly">Cuatrimestral</option>
+                    <option value="occasional">Ocasional</option>
+                    <option value="anual">Anual</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Capacidad</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={formData.capacity}
+                    onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
+                    required
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Fecha de inicio</label>
+                  <input
+                    type="date"
+                    value={formData.startDate}
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    required
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Fecha de fin</label>
+                  <input
+                    type="date"
+                    value={formData.endDate}
+                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    required
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Cuotas</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={formData.installments}
+                    onChange={(e) => setFormData({ ...formData, installments: Number(e.target.value) })}
+                    required
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                  />
                 </div>
                 <div className="flex items-center">
                   <input type="checkbox" checked={formData.enabled} onChange={(e) => setFormData({ ...formData, enabled: e.target.checked })} className="w-5 h-5 text-indigo-600 rounded" />
@@ -298,18 +335,18 @@ export default function WorkshopsPage() {
                       {workshop.picture && typeof workshop.picture === 'string' && workshop.picture.trim() !== '' ? (
                         <img
                           src={
-                            workshop.picture.startsWith('/uploads/')
+                            /^https?:\/\//.test(workshop.picture) || workshop.picture.startsWith('/uploads/')
                               ? workshop.picture
                               : `/uploads/${workshop.picture.replace(/^\/+/, '')}`
                           }
                           alt="Foto"
                           className="w-12 h-12 object-cover rounded"
                           onError={e => {
-                            (e.currentTarget as HTMLImageElement).src = '/default-placeholder.png';
+                            (e.currentTarget as HTMLImageElement).src = '/default-placeholder.svg';
                           }}
                         />
                       ) : (
-                        <img src="/default-placeholder.png" alt="Sin foto" className="w-12 h-12 object-cover rounded opacity-60" />
+                        <img src="/default-placeholder.svg" alt="Sin foto" className="w-12 h-12 object-cover rounded opacity-60" />
                       )}
                     </td>
                     <td className="px-6 py-4 font-semibold text-gray-900">{workshop.name}</td>

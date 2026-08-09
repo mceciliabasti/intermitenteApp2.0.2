@@ -5,6 +5,12 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAudio } from '@/components/AudioProvider';
 import StudentNavBar from '@/components/StudentNavBar';
 
+function getWorkshopImageSrc(picture?: string) {
+  if (!picture || !picture.trim()) return '/default-placeholder.svg';
+  if (/^https?:\/\//.test(picture) || picture.startsWith('/uploads/')) return picture;
+  return `/uploads/${picture.replace(/^\/+/, '')}`;
+}
+
 export default function WorkshopDetail() {
   // Estado para el orden
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -65,8 +71,22 @@ export default function WorkshopDetail() {
     <div className="min-h-screen p-8 bg-gray-50 text-gray-900">
       <StudentNavBar />
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-4">{workshop.name}</h1>
-        <p className="text-gray-700 mb-6">{workshop.description}</p>
+        <div className="mb-6 bg-white rounded-xl shadow p-4 sm:p-5 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 sm:gap-6 items-stretch">
+          <div className="w-full h-52 sm:h-64 md:h-full md:min-h-[220px] bg-gray-50 rounded-lg border border-gray-100 flex items-center justify-center overflow-hidden">
+            <img
+              src={getWorkshopImageSrc(workshop.picture)}
+              alt={`Imagen de ${workshop.name}`}
+              className="w-full h-full object-contain p-2"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/default-placeholder.svg';
+              }}
+            />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-bold mb-3">{workshop.name}</h1>
+            <p className="text-gray-700">{workshop.description}</p>
+          </div>
+        </div>
 
         {/* Tabs for categories */}
         <div className="mb-6 border-b border-gray-200 flex flex-wrap gap-2">

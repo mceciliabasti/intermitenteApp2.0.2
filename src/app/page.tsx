@@ -10,6 +10,13 @@ interface Workshop {
   name: string;
   description: string;
   enabled: boolean;
+  picture?: string;
+}
+
+function getWorkshopImageSrc(picture?: string) {
+  if (!picture || !picture.trim()) return '/default-placeholder.svg';
+  if (/^https?:\/\//.test(picture) || picture.startsWith('/uploads/')) return picture;
+  return `/uploads/${picture.replace(/^\/+/, '')}`;
 }
 
 export default function Home() {
@@ -66,7 +73,17 @@ export default function Home() {
             <div className="grid gap-6 md:grid-cols-2">
               {workshops.map((w) => (
                 <div key={w._id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                  <h2 className="text-xl font-semibold mb-2 text-gray-900">{w.name}</h2>
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={getWorkshopImageSrc(w.picture)}
+                      alt={`Imagen de ${w.name}`}
+                      className="w-12 h-12 rounded object-cover"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = '/default-placeholder.svg';
+                      }}
+                    />
+                    <h2 className="text-xl font-semibold text-gray-900">{w.name}</h2>
+                  </div>
                   <p className="text-gray-600 mb-4">{w.description}</p>
                   <button
                     onClick={() => router.push(`/workshops/${w._id}`)}
